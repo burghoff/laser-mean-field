@@ -1,4 +1,4 @@
-Simulate a QCL (or any other laser) using the mean-field theory discussed in Burghoff's "Frequency-modulated combs as phase solitons" (ArXiv:2006.12397, 2020).
+Simulate a QCL (or any other laser) using the mean-field theory discussed in Burghoff's "Frequency-modulated combs as phase solitons" (ArXiv:2006.12397, 2020). This theory reduces the Maxwell-Bloch equations of a laser down to a single equation that can be integrated over the round trip of a cavity, by normalizing the internal field to the internal gain of the laser above threshold. 
 
 Specifically, it uses a symmetric split-step method to find the F function in equation (5). Also produces a theoretical plot for the theoretical form of the soliton (equation (9), currently only valid for a Fabry-Perot cavity with either R1=1 or R2=1).
 
