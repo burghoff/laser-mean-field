@@ -1,15 +1,17 @@
 function soln=Mean_Field_Theory(p)
 % Simulate a QCL (or any other laser) using the mean-field theory discussed
 % in Burghoff's "Frequency-modulated combs as phase solitons" (ArXiv:2006.12397, 2020).
-% Also produces a theoretical plot for the theoretical form of the soliton
-% (currently only valid for a Fabry-Perot cavity with either R1=1 or R2=1).
 %
-% Still has substantial room for improvement.
-
+% Specifically, it uses a symmetric split-step method to find the F function in equation (5).
+% Also produces a theoretical plot for the theoretical form of the soliton
+% (equation (9), currently only valid for a Fabry-Perot cavity with either R1=1 or R2=1).
+%
 % Input: a parameter structure generated using NLFM_Params
 % Output: a solution structure that stores the field evolution
 % Example 1: s=Mean_Field_Theory(NLFM_Params('kpp',-1000))
 %            Sets all parameters to their default but the dispersion, which is -1000 fs^2/mm
+%
+% Contributors: David Burghoff, Levi Humbard
 
 %% Load params, set constants
 addpath('path_functions');
