@@ -16,6 +16,10 @@ function soln=Mean_Field_Theory(p)
 % Example 2: s=Mean_Field_Theory(NLFM_Params('gc',0,'useLinPwrApprox',1))
 %            Disables gain curvature and makes the linear power
 %            approximation, which leads to the phase version of the NLSE
+% Example 3: s=Mean_Field_Theory(NLFM_Params('initphi','cosine2','numTr',5000))
+%            Initialize the phase to a periodic cosine, which converges to the N=2
+%            harmonic state. (For numerical reasons it eventually decays to
+%            the fundamental.)
 %
 % Contributors: David Burghoff, Levi Humbard
 
