@@ -1,15 +1,21 @@
 function soln=Mean_Field_Theory(p)
 % Simulate a QCL (or any other laser) using the mean-field theory discussed
 % in Burghoff's "Frequency-modulated combs as phase solitons" (ArXiv:2006.12397, 2020).
-%
+% This theory reduces the Maxwell-Bloch equations of a laser down to a
+% single equation that can be integrated over the round trip of a cavity, which is then iterated.
+% A GUI allows certain parameters to be adjusted on the fly if desired.
+
 % Specifically, it uses a symmetric split-step method to find the F function in equation (5).
-% Also produces a theoretical plot for the theoretical form of the soliton
+% It also produces a theoretical plot for the theoretical form of the soliton
 % (equation (9), currently only valid for a Fabry-Perot cavity with either R1=1 or R2=1).
 %
 % Input: a parameter structure generated using NLFM_Params
 % Output: a solution structure that stores the field evolution
 % Example 1: s=Mean_Field_Theory(NLFM_Params('kpp',-1000))
 %            Sets all parameters to their default but the dispersion, which is -1000 fs^2/mm
+% Example 2: s=Mean_Field_Theory(NLFM_Params('gc',0,'useLinPwrApprox',1))
+%            Disables gain curvature and makes the linear power
+%            approximation, which leads to the phase version of the NLSE
 %
 % Contributors: David Burghoff, Levi Humbard
 
@@ -61,7 +67,7 @@ if plotprogress
     dinput(fh,'edit','kpp',num2str(kpp/(1e-30 / 1e-3)),@kppedit);
     dinput(fh,'edit','gammaK',num2str(gammaK),@betaedit);
     dinput(fh,'pushbutton','','Reset',@reset);
-    dinput(fh,'pushbutton','','Toggle GC',@toggc);
+    dinput(fh,'pushbutton','','Gain curvature?',@toggc);
     dinput(fh,'pushbutton','','Kick phase',@phasepert);
     dinput(fh,'edit','h',num2str(h),@hedit);
     dinput(fh,'pushbutton','','Theory?',@toggletheory);
@@ -113,7 +119,7 @@ Km = 1/(2*Lc)*sum(K)*dz;
         N1 = -g0/2/Psat.*(c/n)*(abs(Fi).^2*Km + 2*Khat(abs(Fi).^2) -3*Km*P(1));
         N1 = N1 - i*gammaK*c/n*(abs(Fi).^2*Km + 2*Khat(abs(Fi).^2));
         
-        if p.useNLSEapprox == 0 
+        if p.useLinPwrApprox == 0 
             N1 = N1 - g0/2/Psat*(c/n)^2*(2*T1+3  *T2)*Khat(conj(dFdz).*Fi);
             N1 = N1 - g0/2/Psat*(c/n)^2*(  T1+5/2*T2)*Khat(conj(Fi).*dFdz);
         else
@@ -212,9 +218,9 @@ for ii=1:Nt
             as(jj).Position(1)=as(jj).Position(1)+.08;
             as(jj).Position(3)=as(jj).Position(3)-.05;
         end
-        a1.Position=[0.21 0.7994 0.725 0.1577];
-        a2.Position=[0.21 0.5683 0.725 0.1577];
-        a3.Position=[0.21 0.3398 0.725 0.1577];
+        a1.Position=[0.22 0.7994 0.725 0.1577];
+        a2.Position=[0.22 0.5683 0.725 0.1577];
+        a3.Position=[0.22 0.3398 0.725 0.1577];
         drawnow; disptimer=tic;
         if pushed==1, break; end
     end

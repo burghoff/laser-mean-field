@@ -24,7 +24,7 @@ os.Gamma=1;                         % Gamma (waveguide overlap)
 
 % Simulation params
 os.h = 1;                           % split-step timestep (fraction of round trip time)
-os.dtperTr = 1000;                  % nodes per round trip time
+os.dtperTr = 1000;                  % nodes per round trip
 os.numTr = 10000;                   % number of round trip times to simulate
 os.Crnt=1;                          % Courant number
 os.gc=1;                            % gain curvature enabled?
@@ -32,7 +32,7 @@ os.Ls='lorentzian';                 % lineshape function ('lorentzian' or 'parab
 os.useN2N3=0;                       % use all the nonlinear terms? (requires smaller h, 0.125 sufficient for default settings)
 os.initphi='fundamental';           % phase initialization ('fundamental','harmonicN','cosineN','rand')
 os.maxsave=10000;                   % number of states to save (1 gives final result only)
-os.useNLSEapprox = 0;               % approximate cross-steepening terms using the NLSE (linear power) approximation?
+os.useLinPwrApprox = 0;             % approximate cross-steepening terms using the linear power approximation? (leads to the NLSE)
 
 % Plot parameters
 os.plotprogress=1;                  % plot progress?
