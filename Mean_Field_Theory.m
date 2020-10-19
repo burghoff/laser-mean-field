@@ -257,6 +257,7 @@ soln.f=af(:,sr);                                                    % inst. freq
 soln.shft=ashft(sr);                                                % shifts to move the jump to 75%
 soln.S=aS(:,sr);                                                    % spectrum
 soln.Sf=-c/n*fss;                                                   % spectrum frequencies
+soln.Ls=real(Ls(-c/n*fss*2*pi));                                    % gain lineshape
 
 % Last 10% metrics 
 [soln.pn10] = deal(zeros(size(fss)));                             
@@ -278,7 +279,9 @@ function [Epi,Emi] = toNormal(Ei)
     Epi = [Ei(1:Ndz);NaN*Ei(Ndz+1)];
     Emi = [Ei(1)*NaN;flipud(Ei(Ndz+1:end))];
 end
-        
+
+[phia,fa,Pgc,Deff] = Analytic_Calculations();
+soln.analytic = struct('phi',phia,'f',fa,'P',Pgc,'betaeff',Deff);
 
 %% Plot button handling
     function buttonpushed(varargin)
