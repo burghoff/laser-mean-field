@@ -233,7 +233,7 @@ for ii=1:Nt
         myi = find(iio==ii);
         phi = unwrap(angle(F));
         dphiend = round((phi(end)-phi(1))/(2*pi))*2*pi;
-        phi = phi - dphiend/(2*Lc)*z2;
+%         phi = phi - dphiend/(2*Lc)*z2;
         [~,l6] = min(abs(z2-0.75*2*Lc));
         [~,ml]=max(phi/sign(kpp));
         aF   (:,myi)=F;
