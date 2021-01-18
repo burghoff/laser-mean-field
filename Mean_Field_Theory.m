@@ -281,8 +281,8 @@ function [Epi,Emi] = toNormal(Ei)
     Emi = [Ei(1)*NaN;flipud(Ei(Ndz+1:end))];
 end
 
-[phia,fa,Pgc,Deff] = Analytic_Calculations();
-soln.analytic = struct('phi',phia,'f',fa,'P',Pgc,'betaeff',Deff);
+[phia,fa,Pgc,Deff,fceo_XS,fceo_Kerr] = Analytic_Calculations();
+soln.analytic = struct('phi',phia,'f',fa,'P',Pgc,'betaeff',Deff,'fceo_XS',fceo_XS,'fceo_Kerr',fceo_Kerr);
 
 %% Plot button handling
     function buttonpushed(varargin)
@@ -402,7 +402,7 @@ soln.analytic = struct('phi',phia,'f',fa,'P',Pgc,'betaeff',Deff);
     end
 
     %% Analytical Calculations
-    function [phia,fa,Pgc,betaeff] = Analytic_Calculations()
+    function [phia,fa,Pgc,betaeff,fceo_XS,fceo_Kerr] = Analytic_Calculations()
         kppeff = kpp - 2*Psat*(T2^2).^gc*gammaK;
         betaeff = kppeff*(c/n)^3;
         gm = g0/(2*Psat)*(c/n)^2*(T1+1/2*T2)*(P(end)-P(1))/(4*Lc*P(1));
@@ -416,8 +416,9 @@ soln.analytic = struct('phi',phia,'f',fa,'P',Pgc,'betaeff',Deff);
         
         phia = 1/2*gm/betaeff*Aa^2*(z2-Lc).^2;
         fa = -c/(4*pi*n)*gm/(betaeff/2)*abs(Aa).^2.*(z2-Lc);
-        fa = fa -1/(24*pi)*gm/(betaeff/2)*Lc^2*gm*abs(Aa).^4;
-        fa = fa -1/(2*pi)*gammaK*c/n*3*Km*abs(Aa).^2;
+        fceo_XS = -1/(24*pi)*gm/(betaeff/2)*Lc^2*gm*abs(Aa).^4;
+        fceo_Kerr = -1/(2*pi)*gammaK*c/n*3*Km*abs(Aa).^2;
+        fa = fa + fceo_XS + fceo_Kerr;
         
         Pgc = P0 + 1/r*(betaeff/2*1/2*gm/betaeff*Aa^2*2 + ...
                        -Dg/4*(1/2*gm/betaeff*Aa^2*2*(z2-Lc)).^2);
