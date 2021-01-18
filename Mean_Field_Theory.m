@@ -129,7 +129,8 @@ Km = 1/(2*Lc)*sum(K)*dz;
         else
             gm = g0/2/Psat*(c/n)^2*(T1+1/2*T2)/(4*Lc)*(P(end)-P(1))/P(1);
             phi = unwrap(angle(F));
-            dphiend = round((phi(end)-phi(1))/(2*pi))*2*pi; phi = phi - dphiend/(2*Lc)*z2;
+            dphiend = round((phi(end)-phi(1))/(2*pi))*2*pi;
+%             phi = phi - dphiend/(2*Lc)*z2;
             N1 = N1 + i*gm*abs(F).^2.*(phi-mean(phi));
         end
         
@@ -183,7 +184,7 @@ for ii=1:Nt
     if toc(disptimer)>plotinterval & plotprogress==1
         phi = unwrap(angle(F));
         dphiend = round((phi(end)-phi(1))/(2*pi))*2*pi;
-        phi = phi - dphiend/(2*Lc)*z2;
+%         phi = phi - dphiend/(2*Lc)*z2;
         
         [phia,fa,Pgc,Deff] = Analytic_Calculations();
         
