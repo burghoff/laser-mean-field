@@ -145,7 +145,7 @@ Km = 1/(2*Lc)*sum(K)*dz;
     end
 
 %% Primary simulation code
-[phia,fa,Pgc] = Analytic_Calculations();
+[phia,fa,Pa] = Analytic_Calculations();
 if isequal(initphi,'fundamental')
     phiI = phia;
 elseif isequal(initphi,'rand')
@@ -158,7 +158,7 @@ elseif isequal(initphi(1:8),'harmonic')
     phias = circshift(phia,[-Ndz+round(2*Ndz/Nharm/2)]);
     phiI= phias(round(mod([0:2*Ndz-1],2*Ndz/Nharm))+1);
 end
-F = sqrt(Pgc).*exp(i*phiI);                                % slow-intensity envelope
+F = sqrt(Pa).*exp(i*phiI);                                % slow-intensity envelope
 
 % Things to save
 Nout = min(maxsave,Nt); iio=round(linspace(1,Nt,Nout));
@@ -186,12 +186,12 @@ for ii=1:Nt
         dphiend = round((phi(end)-phi(1))/(2*pi))*2*pi;
 %         phi = phi - dphiend/(2*Lc)*z2;
         
-        [phia,fa,Pgc,Deff] = Analytic_Calculations();
+        [phia,fa,Pa,Deff] = Analytic_Calculations();
         
         [~,ml]=max(phi/Deff);
         phia = circshift(phia,ml);
         fa = circshift(fa,ml);
-        Pgc = circshift(Pgc,ml);
+        Pa = circshift(Pa,ml);
         
         [~,l6] = min(abs(z2-0.75*2*Lc));
         sfcn = @(x)circshift(x,[l6-ml]);
@@ -202,7 +202,7 @@ for ii=1:Nt
         
         a1=subplot(4,1,1); plot(z2/1e-3,sfcn(abs(F).^2));
         xyt('Position (mm)','Intensity (V/m)^2',['Intensity, t=',num2str(ii*h),' T_r']);
-        if plottheory, hold all; plot(z2/1e-3,sfcn(Pgc)); hold off; end
+        if plottheory, hold all; plot(z2/1e-3,sfcn(Pa)); hold off; end
         ylim([0,2*P0]);
         
         a3=subplot(4,1,3); plot(z2/1e-3,sfcn(diff([NaN;phi])/dz*(-c/n)/(2*pi)/1e12));
@@ -210,7 +210,7 @@ for ii=1:Nt
         xyt('Position (mm)','Frequency (THz)','Frequency');% pause
         
         s1 = abs(fftshift(fft(F))).^2;
-        s2 = abs(fftshift(fft(sqrt(Pgc).*exp(i*phia)))).^2;
+        s2 = abs(fftshift(fft(sqrt(Pa).*exp(i*phia)))).^2;
         s3 = real(Ls(-c/n*fss*2*pi));
         a4=subplot(4,1,4); plot(-c/n*fss/1e12,s1/max(s1)); title('Spectrum');
         xyt('Frequency (THz)','Intensity (a.u.)','Spectrum');
@@ -281,8 +281,8 @@ function [Epi,Emi] = toNormal(Ei)
     Emi = [Ei(1)*NaN;flipud(Ei(Ndz+1:end))];
 end
 
-[phia,fa,Pgc,Deff,fceo_XS,fceo_Kerr] = Analytic_Calculations();
-soln.analytic = struct('phi',phia,'f',fa,'P',Pgc,'betaeff',Deff,'fceo_XS',fceo_XS,'fceo_Kerr',fceo_Kerr);
+[phia,fa,Pa,Deff,fceo_XS,fceo_Kerr] = Analytic_Calculations();
+soln.analytic = struct('phi',phia,'f',fa,'P',Pa,'betaeff',Deff,'fceo_XS',fceo_XS,'fceo_Kerr',fceo_Kerr);
 
 %% Plot button handling
     function buttonpushed(varargin)
@@ -314,8 +314,8 @@ soln.analytic = struct('phi',phia,'f',fa,'P',Pgc,'betaeff',Deff,'fceo_XS',fceo_X
     end
 
     function reset(varargin)
-        [phia,fa,Pgc,Dv] = Analytic_Calculations();
-        F = sqrt(Pgc).*exp(i*phiI); 
+        [phia,fa,Pa,Dv] = Analytic_Calculations();
+        F = sqrt(Pa).*exp(i*phiI); 
     end
     function toggc(varargin)
         gc = 1-gc;
@@ -402,7 +402,7 @@ soln.analytic = struct('phi',phia,'f',fa,'P',Pgc,'betaeff',Deff,'fceo_XS',fceo_X
     end
 
     %% Analytical Calculations
-    function [phia,fa,Pgc,betaeff,fceo_XS,fceo_Kerr] = Analytic_Calculations()
+    function [phia,fa,Pa,betaeff,fceo_XS,fceo_Kerr] = Analytic_Calculations()
         kppeff = kpp - 2*Psat*(T2^2).^gc*gammaK;
         betaeff = kppeff*(c/n)^3;
         gm = g0/(2*Psat)*(c/n)^2*(T1+1/2*T2)*(P(end)-P(1))/(4*Lc*P(1));
@@ -412,7 +412,6 @@ soln.analytic = struct('phi',phia,'f',fa,'P',Pgc,'betaeff',Deff,'fceo_XS',fceo_X
         
         gammaKp = gammaK*c/n*3*Km;
         Dg=2*g0*T2^2*(c/n)^3*gc;
-%         beta = beta - 1*nK*Dg/r/2;
         
         phia = 1/2*gm/betaeff*Aa^2*(z2-Lc).^2;
         fa = -c/(4*pi*n)*gm/(betaeff/2)*abs(Aa).^2.*(z2-Lc);
@@ -420,13 +419,12 @@ soln.analytic = struct('phi',phia,'f',fa,'P',Pgc,'betaeff',Deff,'fceo_XS',fceo_X
         fceo_Kerr = -1/(2*pi)*gammaK*c/n*3*Km*abs(Aa).^2;
         fa = fa + fceo_XS + fceo_Kerr;
         
-        Pgc = P0 + 1/r*(betaeff/2*1/2*gm/betaeff*Aa^2*2 + ...
-                       -Dg/4*(1/2*gm/betaeff*Aa^2*2*(z2-Lc)).^2);
+%         Pgc = P0 + 1/r*(betaeff/2*1/2*gm/betaeff*Aa^2*2 + ...
+%                        -Dg/4*(1/2*gm/betaeff*Aa^2*2*(z2-Lc)).^2);
+        Pa = Aa.^2 - Dg/(4*r)*(Aa^2*gm*(z2-Lc)/betaeff).^2;       % bug fixed 1.20.2021
                    
         stabnum = P0*Dg/r*(gm*Lc/2/(betaeff/2-gammaKp*Dg/4/r)).^2
         BW = 1/(24*pi)*2*Lc*am*(g0-aw-am)/kppeff*(T1+1/2*T2)
-        
-%         phia = pi*n/(2*c*Lc)*BW*(z2-Lc).^2;
     end
 
 end
