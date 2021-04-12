@@ -33,6 +33,9 @@ os.useN2N3=0;                       % use all the nonlinear terms? (requires sma
 os.initphi='fundamental';           % phase initialization ('fundamental','harmonicN','cosineN','rand')
 os.maxsave=10000;                   % number of states to save (1 gives final result only)
 os.useLinPwrApprox = 0;             % approximate cross-steepening terms using the linear power approximation? (leads to the NLSE)
+os.ampphase = 0;                    % for master equation solutions, use amplitude-phase? (default is no)
+                                    % Generally, amplitude-phase has less numerical diffusion (gain curvature) but is more
+                                    % prone to numerical divergence
 
 % Plot parameters
 os.plotprogress=1;                  % plot progress?
