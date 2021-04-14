@@ -1,5 +1,5 @@
 Simulate a QCL (or any other laser) using the mean-field theory discussed in Burghoff's "Unraveling the origin of frequency modulated
-combs using active cavity mean-field theory" (https://doi.org/10.1364/OPTICA.408917, originally posted as a preprint [here](http://arxiv.org/abs/2006.12397)). This theory reduces the Maxwell-Bloch equations of a laser down to a single equation that can be integrated over the round trip of a cavity, which is then iterated. A GUI allows certain parameters to be adjusted on the fly if desired.
+combs using active cavity mean-field theory" (https://doi.org/10.1364/OPTICA.408917, preprint version [here](http://arxiv.org/abs/2006.12397)). This theory reduces the Maxwell-Bloch equations of a laser down to a single equation that can be integrated over the round trip of a cavity, which is then iterated. A GUI allows certain parameters to be adjusted on the fly if desired.
 
 Specifically, it uses a symmetric split-step method to evolve the F function according to equation (5). It also produces a theoretical plot for the theoretical form of the soliton (equation (9), currently only valid for a Fabry-Perot cavity with either R1=1 or R2=1).
 
